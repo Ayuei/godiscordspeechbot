@@ -1,12 +1,12 @@
 # godiscordspeechbot
 Golang Discord bot with speech recognition and replies
 
-##Usage 
+## Usage 
 ```
 go run main.go
 ```
 
-##Features
+## Features
  - [x] speech recognition (Requires deepspeech server (github.com/ayuei/deepspeechserver) WIP: very slow) (!listen)
  - [x] music playback (!play)
  - [x] text to speech (!speak)
