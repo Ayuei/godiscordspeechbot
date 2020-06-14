@@ -2,8 +2,8 @@ package commands
 
 import "./botcommands"
 
-var lookUpCommand = CmdInfo{command: botcommands.LookupGame, help: "Look up the ranked statistics of the apes in your game"}
-var playCommand = CmdInfo{command: botcommands.Play, help: "Play a youtube video??"}
+var lookUpCommand = CmdInfo{command: botcommands.LookupGame, help: "Look up the ranked statistics of the players in your game"}
+var playCommand = CmdInfo{command: botcommands.Play, help: "Play a Youtube Video"}
 var echoCommand = CmdInfo{command: botcommands.Echo, help: "Jason 2.0"}
 var joinCommand = CmdInfo{command: botcommands.Join, help: "Summons me to your voice channel"}
 var stopCommand = CmdInfo{command: botcommands.Stop, help: "Desummons me"}
