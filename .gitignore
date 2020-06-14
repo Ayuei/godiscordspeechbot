@@ -5,3 +5,5 @@ hist
 go
 config.json
 history
+music_cache/
+.idea
