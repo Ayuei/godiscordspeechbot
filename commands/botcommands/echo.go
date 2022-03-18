@@ -20,7 +20,7 @@ func Echo(b *bot.Bot, ctx *discordgo.MessageCreate, args []string) {
 	go dgvoice.ReceivePCM(v, recv)
 	go dgvoice.SendPCM(v, send)
 
-	v.Speaking(true)
+	_ = v.Speaking(true)
 	defer v.Speaking(false)
 
 	for {

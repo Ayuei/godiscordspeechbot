@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/bwmarrin/dgvoice"
+	"godiscordspeechbot/cogs"
 	"io/ioutil"
 	"time"
 
@@ -28,11 +29,12 @@ type Config struct {
 
 // Bot struct to abstract
 type Bot struct {
-	Session  *discordgo.Session
-	LoggedIn bool
-	Prefix   string
-	config   Config
-	RiotAPI  *golio.Client
+	Session    *discordgo.Session
+	LoggedIn   bool
+	Prefix     string
+	config     Config
+	CogHandler *cogs.CogHandler
+	RiotAPI    *golio.Client
 }
 
 // Login logs in the bot
@@ -62,7 +64,7 @@ func New(configPath string) (b *Bot, e error) {
 	}
 
 	var conf Config
-	json.Unmarshal(body, &conf)
+	_ = json.Unmarshal(body, &conf)
 
 	b = new(Bot)
 	b.LoggedIn = false
@@ -89,10 +91,34 @@ func (b Bot) Say(ctx *discordgo.MessageCreate, message string, deleteAfter ...in
 	}
 
 	if delMessageMillis > 0 {
-		go func(t int, mID string){
-			time.Sleep(time.Duration(t)*time.Second)
+		go func(t int, mID string) {
+			time.Sleep(time.Duration(t) * time.Second)
 
 			_ = b.Session.ChannelMessageDelete(ctx.ChannelID, mID)
+		}(delMessageMillis, msg.ID)
+	}
+
+	return msg
+}
+
+func (b Bot) SendMsgChannel(channel string, message string, deleteAfter ...int) *discordgo.Message {
+	delMessageMillis := -1
+
+	msg, err := b.Session.ChannelMessageSend(channel, message)
+
+	if err != nil {
+		fmt.Println("Error has occurred while sending message", err)
+	}
+
+	if len(deleteAfter) > 0 {
+		delMessageMillis = deleteAfter[0]
+	}
+
+	if delMessageMillis > 0 {
+		go func(t int, mID string) {
+			time.Sleep(time.Duration(t) * time.Second)
+
+			_ = b.Session.ChannelMessageDelete(channel, mID)
 		}(delMessageMillis, msg.ID)
 	}
 
@@ -113,8 +139,8 @@ func (b Bot) SayEmbed(ctx *discordgo.MessageCreate, message *discordgo.MessageEm
 	}
 
 	if delMessageMillis > 0 {
-		go func(t int, mID string){
-			time.Sleep(time.Duration(t)*time.Second)
+		go func(t int, mID string) {
+			time.Sleep(time.Duration(t) * time.Second)
 
 			_ = b.Session.ChannelMessageDelete(ctx.ChannelID, mID)
 		}(delMessageMillis, msg.ID)
@@ -131,7 +157,7 @@ func (b Bot) findUserVoiceState(userid string) (*discordgo.VoiceState, error) {
 			}
 		}
 	}
-	return nil, errors.New("Could not find user's voice state")
+	return nil, errors.New("could not find users voice state")
 }
 
 func (b *Bot) JoinUserVoiceChannel(userID string) (*discordgo.VoiceConnection, error) {
@@ -141,8 +167,8 @@ func (b *Bot) JoinUserVoiceChannel(userID string) (*discordgo.VoiceConnection, e
 		return nil, err
 	}
 
-    // Join the user's channel and start unmuted and deafened.
-    return b.Session.ChannelVoiceJoin(vs.GuildID, vs.ChannelID, false, false)
+	// Join the user's channel and start unmuted and deafened.
+	return b.Session.ChannelVoiceJoin(vs.GuildID, vs.ChannelID, false, false)
 }
 
 func (b *Bot) PlaySong(songPath string, v *discordgo.VoiceConnection) chan bool {

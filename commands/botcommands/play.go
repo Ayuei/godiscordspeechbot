@@ -4,9 +4,9 @@ import (
 	"../../bot"
 	"../../music"
 	"fmt"
-	"strings"
-	"os"
 	"github.com/bwmarrin/discordgo"
+	"os"
+	"strings"
 )
 
 const basePath = "/home/dietpi/github/golang_discord_assistant/src/music_cache/"
@@ -20,20 +20,10 @@ func exists(path string) (bool, error) {
 }
 
 func Play(b *bot.Bot, ctx *discordgo.MessageCreate, args []string) {
-//<<<<<<< HEAD
-//
-//	if len(args) == 0 {
-//		b.Say(ctx, "You need to specify a link!", 3)
-//	}
-//
-//	url := args[0]
-//	cmd := music.DownloadMP3(url)
-//=======
 	url := args[0]
 	fp := basePath+strings.Split(url, "=")[1]+".opus"
 
 	ok, err := exists(fp)
-//>>>>>>> a9bea77be79a8b8d31b6657ce6f08d7c6c3183e4
 
 	if !ok || err != nil {
 		fmt.Println("Downloading new Mp3")

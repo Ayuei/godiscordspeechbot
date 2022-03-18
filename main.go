@@ -74,7 +74,7 @@ func onMessageReceive(s *discordgo.Session, m *discordgo.MessageCreate) {
 		return
 	}
 
-	toLog := "[" + string(m.Timestamp) + "]" + " [" + m.Author.Username + "] " + m.Content
+	toLog := "[" + m.Timestamp.String() + "]" + " [" + m.Author.Username + "] " + m.Content
 	fmt.Println(toLog)
 
 	logger.Messages <- toLog
