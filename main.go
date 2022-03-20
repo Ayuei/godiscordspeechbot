@@ -6,7 +6,6 @@ import (
 	"./utils"
 	"flag"
 	"fmt"
-	"godiscordspeechbot/cogs"
 	"os"
 	"os/signal"
 	"strings"
@@ -45,8 +44,6 @@ func main() {
 	}
 
 	commandHandler = commands.NewCommandHandler()
-	cogHandler := cogs.NewCogHandler()
-	go cogHandler.Run(*matthewBot)
 
 	commands.LoadDirectoryToHandler(commandHandler)
 	logger = utils.NewLogger("data/logs/log.txt")
@@ -54,6 +51,7 @@ func main() {
 
 	matthewBot.Session.AddHandler(onMessageReceive)
 	matthewBot.Session.AddHandler(processCommands)
+	go matthewBot.CogHandler.Run(*matthewBot)
 
 	err = matthewBot.Session.Open()
 	go utils.StartLogger(logger, quit)
