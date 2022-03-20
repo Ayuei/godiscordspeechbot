@@ -26,7 +26,6 @@ type (
 )
 
 func NewCogHandler() *CogHandler {
-	// Return a command handler with an zero initialized map
 	return &CogHandler{
 		CogList{},
 	}

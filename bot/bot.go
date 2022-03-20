@@ -9,8 +9,8 @@ import (
 	"io/ioutil"
 	"time"
 
-	"github.com/ayuei/golio"
-	"github.com/ayuei/golio/api"
+	"github.com/KnutZuidema/golio"
+	"github.com/KnutZuidema/golio/api"
 	"github.com/bwmarrin/discordgo"
 )
 
@@ -25,6 +25,7 @@ type Config struct {
 	ShardCount    int    `json:"shard_count"`
 	DefaultStatus string `json:"default_status"`
 	RiotAPIKey    string `json:"riot_api_key"`
+	LostArkURL    string `json:"lost_ark_base_url"`
 }
 
 // Bot struct to abstract
@@ -70,6 +71,7 @@ func New(configPath string) (b *Bot, e error) {
 	b.LoggedIn = false
 	b.Prefix = conf.Prefix
 	b.config = conf
+	b.CogHandler = cogs.NewCogHandler()
 
 	fmt.Println("Loaded configuration")
 	fmt.Println("Prefix", b.Prefix)
@@ -176,4 +178,8 @@ func (b *Bot) PlaySong(songPath string, v *discordgo.VoiceConnection) chan bool 
 	dgvoice.PlayAudioFile(v, songPath, quit)
 
 	return quit
+}
+
+func (b *Bot) GetLostArkURL() string {
+	return b.config.LostArkURL
 }

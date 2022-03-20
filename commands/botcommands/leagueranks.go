@@ -3,7 +3,7 @@ package botcommands
 import (
 	"../../bot"
 	"fmt"
-	"github.com/ayuei/golio/riot"
+	"github.com/KnutZuidema/golio/riot/lol"
 	"github.com/bwmarrin/discordgo"
 	"strings"
 )
@@ -50,25 +50,25 @@ func LookupGame(b *bot.Bot, ctx *discordgo.MessageCreate, args []string) {
 		return
 	}
 
-	var p *riot.CurrentGameParticipant // Provide a type hint
-	results := make(chan *riot.LeagueItem)
+	var p *lol.CurrentGameParticipant // Provide a type hint
+	results := make(chan *lol.LeagueItem)
 
 	for _, p = range matchData.Participants {
-		go func(cgp *riot.CurrentGameParticipant) {
+		go func(cgp *lol.CurrentGameParticipant) {
 			queues, _ := b.RiotAPI.Riot.League.ListBySummoner(cgp.SummonerID)
-			var q *riot.LeagueItem
+			var q *lol.LeagueItem
 
 			flag := true
 
 			for _, q = range queues {
-				if q.QueueType == string(riot.QueueRankedSolo) {
+				if q.QueueType == string(lol.QueueRankedSolo) {
 					results <- q
 					flag = false
 				}
 			}
 
 			if flag {
-				results <- &riot.LeagueItem{
+				results <- &lol.LeagueItem{
 					SummonerName: cgp.SummonerName,
 					Tier:         "",
 					Rank:         "Unranked",

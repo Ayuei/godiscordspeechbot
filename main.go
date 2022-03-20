@@ -6,6 +6,7 @@ import (
 	"./utils"
 	"flag"
 	"fmt"
+	"godiscordspeechbot/cogs"
 	"os"
 	"os/signal"
 	"strings"
@@ -44,6 +45,9 @@ func main() {
 	}
 
 	commandHandler = commands.NewCommandHandler()
+	cogHandler := cogs.NewCogHandler()
+	go cogHandler.Run(*matthewBot)
+
 	commands.LoadDirectoryToHandler(commandHandler)
 	logger = utils.NewLogger("data/logs/log.txt")
 	quit := make(chan bool, 1)
