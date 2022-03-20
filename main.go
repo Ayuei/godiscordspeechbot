@@ -117,7 +117,7 @@ func processCommands(s *discordgo.Session, m *discordgo.MessageCreate) {
 	args := fields[1:]
 	name := strings.ToLower(fields[0])
 
-	if name == "%help" {
+	if name == matthewBot.Prefix+"help" {
 		commandHandler.Help(matthewBot, m)
 		return
 	}
