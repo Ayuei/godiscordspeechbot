@@ -1,10 +1,10 @@
 package cogs
 
 import (
+	"../bot"
+	"../utils"
 	"encoding/json"
 	"fmt"
-	"godiscordspeechbot/bot"
-	"godiscordspeechbot/utils"
 	"io"
 	"log"
 	"net/http"

@@ -1,16 +1,16 @@
 package bot
 
 import (
+	"../cogs"
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/bwmarrin/dgvoice"
-	"godiscordspeechbot/cogs"
 	"io/ioutil"
 	"time"
 
 	"github.com/KnutZuidema/golio"
 	"github.com/KnutZuidema/golio/api"
+	"github.com/bwmarrin/dgvoice"
 	"github.com/bwmarrin/discordgo"
 )
 

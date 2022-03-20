@@ -1,7 +1,7 @@
 package cogs
 
 import (
-	"godiscordspeechbot/bot"
+	"../bot"
 	"time"
 )
 
