@@ -1,7 +1,8 @@
 package botcommands
 
 import (
-	"../../bot"
+	"godiscordspeechbot/bot"
+
 	"github.com/bwmarrin/dgvoice"
 	"github.com/bwmarrin/discordgo"
 )
@@ -33,4 +34,3 @@ func Echo(b *bot.Bot, ctx *discordgo.MessageCreate, args []string) {
 		send <- p.PCM
 	}
 }
-

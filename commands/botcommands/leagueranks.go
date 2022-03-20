@@ -1,11 +1,12 @@
 package botcommands
 
 import (
-	"../../bot"
 	"fmt"
+	"godiscordspeechbot/bot"
+	"strings"
+
 	"github.com/KnutZuidema/golio/riot/lol"
 	"github.com/bwmarrin/discordgo"
-	"strings"
 )
 
 func formatRankedMessage(players string, ranks string, winRates string) *discordgo.MessageEmbed {
@@ -108,4 +109,3 @@ func LookupGame(b *bot.Bot, ctx *discordgo.MessageCreate, args []string) {
 		winRates.String(),
 	))
 }
-

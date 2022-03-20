@@ -1,13 +1,14 @@
 package botcommands
 
 import (
-	"../../bot"
-	"./commandUtils"
 	"fmt"
-	"github.com/bwmarrin/dgvoice"
-	"github.com/bwmarrin/discordgo"
+	"godiscordspeechbot/bot"
+	"godiscordspeechbot/commands/botcommands/commandUtils"
 	"log"
 	"strings"
+
+	"github.com/bwmarrin/dgvoice"
+	"github.com/bwmarrin/discordgo"
 )
 
 func Speak(b *bot.Bot, ctx *discordgo.MessageCreate, args []string) {

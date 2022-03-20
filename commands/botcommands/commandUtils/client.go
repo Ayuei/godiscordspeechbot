@@ -2,19 +2,19 @@ package commandUtils
 
 import (
 	"fmt"
+	"net/url"
+
 	"github.com/bwmarrin/discordgo"
 	"github.com/gorilla/websocket"
-	"net/url"
 )
 
-
-type SpeechMessage struct{
+type SpeechMessage struct {
 	PCM []int16
 }
 
 const addr = "192.168.20.8:8080"
 
-func Start(receive chan *discordgo.Packet, output chan string){
+func Start(receive chan *discordgo.Packet, output chan string) {
 
 	u := url.URL{Scheme: "ws", Host: addr, Path: "/stream"}
 
@@ -28,7 +28,7 @@ func Start(receive chan *discordgo.Packet, output chan string){
 
 	for {
 		select {
-		case data := <- receive:
+		case data := <-receive:
 			err = conn.WriteJSON(SpeechMessage{PCM: data.PCM})
 			err = conn.WriteJSON(SpeechMessage{PCM: []int16{}})
 

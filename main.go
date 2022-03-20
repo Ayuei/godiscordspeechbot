@@ -1,13 +1,16 @@
 package main
 
 import (
-	"./bot"
-	"./commands"
-	"./utils"
 	"flag"
 	"fmt"
+	"godiscordspeechbot/bot"
+	"godiscordspeechbot/cogs"
+	"godiscordspeechbot/commands"
+	"godiscordspeechbot/utils"
+	"log"
 	"os"
 	"os/signal"
+	"strconv"
 	"strings"
 	"syscall"
 
@@ -18,6 +21,7 @@ var (
 	configPath     string
 	matthewBot     *bot.Bot
 	commandHandler *commands.CommandHandler
+	cogHandler     *cogs.CogHandler
 	logger         *utils.Logger
 )
 
@@ -51,7 +55,10 @@ func main() {
 
 	matthewBot.Session.AddHandler(onMessageReceive)
 	matthewBot.Session.AddHandler(processCommands)
-	go matthewBot.CogHandler.Run(*matthewBot)
+	matthewBot.Session.AddHandler(processCogs)
+
+	cogHandler = cogs.NewCogHandler()
+	go cogHandler.Run(*matthewBot)
 
 	err = matthewBot.Session.Open()
 	go utils.StartLogger(logger, quit)
@@ -127,4 +134,39 @@ func processCommands(s *discordgo.Session, m *discordgo.MessageCreate) {
 	c := *cmd
 
 	c(matthewBot, m, args)
+}
+
+func processCogs(s *discordgo.Session, ctx *discordgo.MessageCreate) {
+	user := ctx.Author
+	b := s.State.User
+
+	if user.ID == b.ID || user.Bot {
+		return
+	}
+
+	content := ctx.Content
+
+	fmt.Println(matthewBot.Prefix, content)
+
+	if !strings.HasPrefix(content, matthewBot.Prefix) {
+		return
+	}
+
+	fields := strings.Fields(content)
+	args := fields[1:]
+	name := strings.ToLower(fields[0])
+
+	if name == matthewBot.Prefix+"cog" {
+		cog := cogs.GetCog(name)
+
+		interval, err := strconv.ParseInt(args[0], 10, 32)
+
+		if err != nil {
+			matthewBot.Say(ctx, "Are you sure you entered a number?", 5)
+			log.Print(err)
+		}
+
+		cogs.RegisterCog(*cogHandler, ctx, cog, int(interval))
+		return
+	}
 }

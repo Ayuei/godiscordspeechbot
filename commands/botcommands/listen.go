@@ -1,8 +1,9 @@
 package botcommands
 
 import (
-	"../../bot"
-	"./commandUtils"
+	"godiscordspeechbot/bot"
+	"godiscordspeechbot/commands/botcommands/commandUtils"
+
 	"github.com/bwmarrin/discordgo"
 )
 
@@ -31,4 +32,3 @@ func Listen(b *bot.Bot, ctx *discordgo.MessageCreate, args []string) {
 		}
 	}
 }
-

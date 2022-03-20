@@ -1,10 +1,11 @@
 package cogs
 
 import (
-	"../bot"
-	"../utils"
 	"encoding/json"
 	"fmt"
+	"github.com/bwmarrin/discordgo"
+	"godiscordspeechbot/bot"
+	"godiscordspeechbot/utils"
 	"io"
 	"log"
 	"net/http"
@@ -44,7 +45,7 @@ type DiscordMsg struct {
 	URL   string
 }
 
-func curlGet(baseURL string, path string) string {
+func curlGet(baseURL string, path string) []byte {
 	baseURL = strings.Trim(baseURL, "/")
 	req, err := http.NewRequest("GET", baseURL+"/"+path, nil)
 
@@ -65,16 +66,16 @@ func curlGet(baseURL string, path string) string {
 	if resp != nil && resp.StatusCode == http.StatusOK {
 		bodyBytes, err := io.ReadAll(resp.Body)
 		if err != nil {
-			log.Fatal(err)
+			log.Print(err)
 		}
 
 		bodyString := string(bodyBytes)
 		log.Println(bodyString)
 
-		return bodyString
+		return bodyBytes
 	}
 
-	return ""
+	return []byte{}
 }
 
 func GetNews(b *bot.Bot, category string) NewsResponse {
@@ -82,10 +83,10 @@ func GetNews(b *bot.Bot, category string) NewsResponse {
 
 	var news NewsResponse
 
-	err := json.Decoder.Decode(&respString, news)
+	err := json.Unmarshal(respString, &news)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Print(err)
 	}
 
 	return news
@@ -95,10 +96,10 @@ func GetForumUpdates(b *bot.Bot) ForumResponse {
 	respString := curlGet(b.GetLostArkURL(), "/v1/forums")
 
 	var frm ForumResponse
-	err := json.Decoder.Decode(&respString, frm)
+	err := json.Unmarshal(respString, &frm)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Print(err)
 
 	}
 
@@ -152,16 +153,10 @@ func GetForumItems(hashmap map[uint32]bool, response ForumResponse) []DiscordMsg
 	return msgs
 }
 
-func LostArkCog(b *bot.Bot, args map[string]string, interval time.Duration) {
+func LostArkCog(b *bot.Bot, ctx *discordgo.MessageCreate, interval time.Duration) {
 	ticker := time.NewTicker(interval)
-	channelID, ok := args["channelID"]
 	newsHashMap := make(map[uint32]bool)
 	forumHashap := make(map[uint32]bool)
-
-	if !ok {
-		b.SendMsgChannel(channelID, "Something went wrong", 5)
-		return
-	}
 
 	for {
 		select {
@@ -171,7 +166,7 @@ func LostArkCog(b *bot.Bot, args map[string]string, interval time.Duration) {
 
 				if len(news) > 0 {
 					for _, newsItem := range news {
-						b.SendMsgChannel(channelID, newsItem.URL)
+						b.SendMsgChannel(ctx.ChannelID, newsItem.URL)
 					}
 				}
 			}
@@ -180,7 +175,7 @@ func LostArkCog(b *bot.Bot, args map[string]string, interval time.Duration) {
 
 			if len(forumUpdates) > 0 {
 				for _, forumUpdate := range forumUpdates {
-					b.SendMsgChannel(channelID, forumUpdate.URL)
+					b.SendMsgChannel(ctx.ChannelID, forumUpdate.URL)
 				}
 			}
 		}

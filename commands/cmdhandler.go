@@ -1,10 +1,11 @@
 package commands
 
 import (
-	"../bot"
 	"github.com/bwmarrin/discordgo"
+	"godiscordspeechbot/bot"
 	"strings"
 )
+
 // Code refactored and commented from
 // https://github.com/ducc/GoMusicBot/blob/master/src/framework/command.go
 
@@ -56,7 +57,7 @@ func (c CmdInfo) GetHelp() string {
 	return c.help
 }
 
-func formatHelpCommand(commands string, helpString string) *discordgo.MessageEmbed{
+func formatHelpCommand(commands string, helpString string) *discordgo.MessageEmbed {
 
 	return &discordgo.MessageEmbed{
 		Title: "List of available commands",
@@ -79,10 +80,10 @@ func formatHelpCommand(commands string, helpString string) *discordgo.MessageEmb
 	}
 }
 
-func (h *CommandHandler) Help(b *bot.Bot, ctx *discordgo.MessageCreate){
+func (h *CommandHandler) Help(b *bot.Bot, ctx *discordgo.MessageCreate) {
 
 	args := strings.Split(ctx.Content, " ")
-	arg :=  "all"
+	arg := "all"
 	var cmds map[string]CmdInfo
 
 	if len(args) > 1 {
@@ -109,8 +110,8 @@ func (h *CommandHandler) Help(b *bot.Bot, ctx *discordgo.MessageCreate){
 
 	for name, cmd = range cmds {
 		if len(name) > 1 {
-			commands.WriteString(name+"\n")
-			helpStrings.WriteString(cmd.GetHelp()+"\n")
+			commands.WriteString(name + "\n")
+			helpStrings.WriteString(cmd.GetHelp() + "\n")
 		}
 	}
 

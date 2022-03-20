@@ -1,8 +1,9 @@
 package botcommands
 
 import (
-	"../../bot"
 	"fmt"
+	"godiscordspeechbot/bot"
+
 	"github.com/bwmarrin/discordgo"
 )
 
@@ -18,4 +19,3 @@ func Stop(b *bot.Bot, ctx *discordgo.MessageCreate, args []string) {
 
 	v.Disconnect()
 }
-

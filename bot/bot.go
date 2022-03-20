@@ -1,7 +1,6 @@
 package bot
 
 import (
-	"../cogs"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -30,12 +29,11 @@ type Config struct {
 
 // Bot struct to abstract
 type Bot struct {
-	Session    *discordgo.Session
-	LoggedIn   bool
-	Prefix     string
-	config     Config
-	CogHandler *cogs.CogHandler
-	RiotAPI    *golio.Client
+	Session  *discordgo.Session
+	LoggedIn bool
+	Prefix   string
+	config   Config
+	RiotAPI  *golio.Client
 }
 
 // Login logs in the bot
@@ -71,7 +69,6 @@ func New(configPath string) (b *Bot, e error) {
 	b.LoggedIn = false
 	b.Prefix = conf.Prefix
 	b.config = conf
-	b.CogHandler = cogs.NewCogHandler()
 
 	fmt.Println("Loaded configuration")
 	fmt.Println("Prefix", b.Prefix)

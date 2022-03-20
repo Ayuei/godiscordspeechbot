@@ -1,28 +1,25 @@
 package cogs
 
 import (
-	"../bot"
+	"github.com/bwmarrin/discordgo"
+	"godiscordspeechbot/bot"
 	"time"
 )
 
 type (
-	CogFunc func(*bot.Bot, map[string]string, time.Duration)
+	CogFunc func(b *bot.Bot, context *discordgo.MessageCreate, interval time.Duration)
 
 	CogHandler struct {
 		cogs CogList
 	}
 
 	Cog struct {
-		Interval  time.Duration
-		Arguments map[string]string
-		Cogfunc   CogFunc
+		Interval time.Duration
+		ctx      *discordgo.MessageCreate
+		Cogfunc  CogFunc
 	}
 
 	CogList []Cog
-
-	CommandHandler struct {
-		cogs CogList
-	}
 )
 
 func NewCogHandler() *CogHandler {
@@ -52,6 +49,6 @@ func (h *CogHandler) RegisterCog(cog Cog) {
 
 func (h *CogHandler) Run(bot bot.Bot) {
 	for _, c := range h.cogs {
-		go c.Cogfunc(&bot, c.Arguments, c.Interval)
+		go c.Cogfunc(&bot, c.ctx, c.Interval)
 	}
 }

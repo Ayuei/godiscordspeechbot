@@ -1,7 +1,8 @@
 package music
 
 import (
-	"../bot"
+	"godiscordspeechbot/bot"
+
 	"github.com/bwmarrin/discordgo"
 )
 
@@ -44,7 +45,7 @@ func (queue *SongQueue) Start(b bot.Bot, ctx *discordgo.MessageCreate) {
 	queue.Running = true
 	for queue.HasNext() && queue.Running {
 		song := queue.Next()
-		b.Say(ctx, "Now playing `" + song.Title + "`.")
+		b.Say(ctx, "Now playing `"+song.Title+"`.")
 		v, found := b.Session.VoiceConnections[ctx.GuildID]
 
 		if !found {

@@ -1,8 +1,9 @@
 package botcommands
 
 import (
-	"../../bot"
 	"fmt"
+	"godiscordspeechbot/bot"
+
 	"github.com/bwmarrin/discordgo"
 )
 
@@ -13,4 +14,3 @@ func Join(b *bot.Bot, ctx *discordgo.MessageCreate, args []string) {
 		fmt.Println("Error joining Voice Channel", err)
 	}
 }
-
