@@ -58,7 +58,7 @@ func main() {
 	matthewBot.Session.AddHandler(processCogs)
 
 	cogHandler = cogs.NewCogHandler()
-	go cogHandler.Run(*matthewBot)
+	go cogHandler.Run(matthewBot)
 
 	err = matthewBot.Session.Open()
 	go utils.StartLogger(logger, quit)
@@ -157,16 +157,29 @@ func processCogs(s *discordgo.Session, ctx *discordgo.MessageCreate) {
 	name := strings.ToLower(fields[0])
 
 	if name == matthewBot.Prefix+"cog" {
-		cog := cogs.GetCog(name)
+		logger.LogMessage("Cog: " + name)
 
-		interval, err := strconv.ParseInt(args[0], 10, 32)
+		if len(args) == 0 {
+			logger.LogMessage("No arguments specified")
+			matthewBot.Say(ctx, "No arguments specified", 5)
+			return
+		}
+
+		cog := cogs.GetCog(args[0])
+
+		logger.LogMessage("Cog Name: " + args[0])
+		interval, err := strconv.ParseInt(args[1], 10, 32)
+		logger.LogMessage("Interval: " + args[1])
 
 		if err != nil {
 			matthewBot.Say(ctx, "Are you sure you entered a number?", 5)
 			log.Print(err)
 		}
 
-		cogs.RegisterCog(*cogHandler, ctx, cog, int(interval))
-		return
+		if cog != nil {
+			logger.LogMessage("Adding Cog")
+			cogs.RegisterCog(*cogHandler, ctx, cog, int(interval))
+			return
+		}
 	}
 }

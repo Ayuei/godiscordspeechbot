@@ -3,6 +3,7 @@ package cogs
 import (
 	"github.com/bwmarrin/discordgo"
 	"godiscordspeechbot/bot"
+	"log"
 	"time"
 )
 
@@ -10,7 +11,8 @@ type (
 	CogFunc func(b *bot.Bot, context *discordgo.MessageCreate, interval time.Duration)
 
 	CogHandler struct {
-		cogs CogList
+		cogs     CogList
+		cogsChan chan Cog
 	}
 
 	Cog struct {
@@ -25,6 +27,7 @@ type (
 func NewCogHandler() *CogHandler {
 	return &CogHandler{
 		CogList{},
+		make(chan Cog),
 	}
 }
 
@@ -45,10 +48,18 @@ func (h CogHandler) Get(idx int) (*Cog, bool) {
 
 func (h *CogHandler) RegisterCog(cog Cog) {
 	h.cogs = append(h.cogs, cog)
+	h.cogsChan <- cog
+
 }
 
-func (h *CogHandler) Run(bot bot.Bot) {
-	for _, c := range h.cogs {
-		go c.Cogfunc(&bot, c.ctx, c.Interval)
+func (h *CogHandler) Run(bot *bot.Bot) {
+	log.Println("Running Cog Handler")
+
+	for {
+		select {
+		case c := <-h.cogsChan:
+			log.Println("Cog Handler")
+			go c.Cogfunc(bot, c.ctx, c.Interval)
+		}
 	}
 }

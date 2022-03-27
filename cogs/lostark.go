@@ -154,17 +154,16 @@ func GetForumItems(hashmap map[uint32]bool, response ForumResponse) []DiscordMsg
 }
 
 func LostArkCog(b *bot.Bot, ctx *discordgo.MessageCreate, interval time.Duration) {
-	ticker := time.NewTicker(interval)
 	newsHashMap := make(map[uint32]bool)
 	forumHashap := make(map[uint32]bool)
 
 	for {
-		select {
-		case <-ticker.C:
+		for range time.Tick(interval) {
 			for _, category := range NewsCategories {
 				news := GetNewsItems(newsHashMap, GetNews(b, category))
 
 				if len(news) > 0 {
+					log.Println("News found!")
 					for _, newsItem := range news {
 						b.SendMsgChannel(ctx.ChannelID, newsItem.URL)
 					}
@@ -174,6 +173,7 @@ func LostArkCog(b *bot.Bot, ctx *discordgo.MessageCreate, interval time.Duration
 			forumUpdates := GetForumItems(forumHashap, GetForumUpdates(b))
 
 			if len(forumUpdates) > 0 {
+				log.Println("Forum updates found!")
 				for _, forumUpdate := range forumUpdates {
 					b.SendMsgChannel(ctx.ChannelID, forumUpdate.URL)
 				}

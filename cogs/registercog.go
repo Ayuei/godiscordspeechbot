@@ -7,7 +7,7 @@ import (
 )
 
 func RegisterCog(handler CogHandler, ctx *discordgo.MessageCreate, cogFunc CogFunc, interval ...int) {
-	duration := time.Second * time.Duration(interval[0])
+	duration := time.Duration(interval[0]) * time.Second
 
 	arguments := make(map[string]string)
 	arguments["server"] = ctx.ChannelID
