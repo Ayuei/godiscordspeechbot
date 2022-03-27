@@ -11,6 +11,7 @@ var joinCommand = CmdInfo{command: botcommands.Join, help: "Summons me to your v
 var stopCommand = CmdInfo{command: botcommands.Stop, help: "Desummons me"}
 var listenCommand = CmdInfo{command: botcommands.Listen, help: "I will listen and transcribe"}
 var speakCommand = CmdInfo{command: botcommands.Speak, help: "I will say what you tell me to"}
+var serverStatus = CmdInfo{command: botcommands.ServerStatus, help: "I will say what you tell me to"}
 
 func LoadDirectoryToHandler(h *CommandHandler) {
 	h.RegisterCommand("league_ranks", lookUpCommand)
@@ -20,4 +21,5 @@ func LoadDirectoryToHandler(h *CommandHandler) {
 	h.RegisterCommand("stop", stopCommand)
 	h.RegisterCommand("listen", listenCommand)
 	h.RegisterCommand("speak", speakCommand)
+	h.RegisterCommand("isup", serverStatus)
 }

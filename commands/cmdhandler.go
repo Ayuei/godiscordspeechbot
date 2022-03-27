@@ -58,7 +58,6 @@ func (c CmdInfo) GetHelp() string {
 }
 
 func formatHelpCommand(commands string, helpString string) *discordgo.MessageEmbed {
-
 	return &discordgo.MessageEmbed{
 		Title: "List of available commands",
 		Color: 0x6a0dad,

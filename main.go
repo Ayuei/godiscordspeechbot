@@ -176,9 +176,12 @@ func processCogs(s *discordgo.Session, ctx *discordgo.MessageCreate) {
 			log.Print(err)
 		}
 
-		if cog != nil {
+		// If the cog is not nil and if it's not added added
+		if cog != nil && !matthewBot.IsCogAdded(args[0]) {
 			logger.LogMessage("Adding Cog")
 			cogs.RegisterCog(*cogHandler, ctx, cog, int(interval))
+			matthewBot.TrackCog(args[0])
+			matthewBot.Say(ctx, "Cog "+args[0]+" registered!", 10)
 			return
 		}
 	}

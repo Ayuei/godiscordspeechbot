@@ -25,15 +25,17 @@ type Config struct {
 	DefaultStatus string `json:"default_status"`
 	RiotAPIKey    string `json:"riot_api_key"`
 	LostArkURL    string `json:"lost_ark_base_url"`
+	RetrieveToday bool   `json:"retrieve_today_only"`
 }
 
 // Bot struct to abstract
 type Bot struct {
-	Session  *discordgo.Session
-	LoggedIn bool
-	Prefix   string
-	config   Config
-	RiotAPI  *golio.Client
+	Session   *discordgo.Session
+	LoggedIn  bool
+	Prefix    string
+	config    Config
+	RiotAPI   *golio.Client
+	AddedCogs map[string]bool
 }
 
 // Login logs in the bot
@@ -48,6 +50,7 @@ func (b *Bot) Login() error {
 	b.RiotAPI = riotClient
 	b.Session = discord
 	b.LoggedIn = true
+	b.AddedCogs = make(map[string]bool)
 
 	fmt.Println("Creating bot")
 
@@ -179,4 +182,19 @@ func (b *Bot) PlaySong(songPath string, v *discordgo.VoiceConnection) chan bool 
 
 func (b *Bot) GetLostArkURL() string {
 	return b.config.LostArkURL
+}
+
+func (b *Bot) TodayOnly() bool {
+	return b.config.RetrieveToday
+}
+
+func (b *Bot) TrackCog(cogStr string) {
+	b.AddedCogs[cogStr] = true
+}
+
+func (b *Bot) IsCogAdded(cogStr string) bool {
+
+	_, exists := b.AddedCogs[cogStr]
+
+	return exists
 }
